@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body %}
+<div class="font-mono flex items-center justify-center mt-4">
+    <div class="p-8 w-96">
+        <h1 class="text-2xl font-bold mb-6 text-accent text-center">Sign In</h1>
+        <div id="auth-login" class="block">
+            <form method="post" hx-post="{% url 'auth-login' %}" hx-target="#auth-login" hx-swap="none" class="flex flex-col">
+                {% csrf_token %}
+                {% include "auth/login.html" %}
+            </form>            
+        </div>
+        <div id="auth-register" class="hidden">
+            <form method="post" hx-post="{% url 'auth-register' %}" hx-target="#auth-login" hx-swap="none" class="flex flex-col">
+                {% csrf_token %}
+                {% include "auth/register.html" %}
+            </form>
+        </div>
+        <div class="text-center flex flex-col mt-4">
+            <div id="error-messages" class="text-left text-red-500 mb-6 text-xs"></div>
+            <a href="#" id="toggle-form" class="text-blue-500 text-sm hover:underline">Don't have an account? Sign Up</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.title = "Sign In";
+    });
+    
+    const toggleForm = document.getElementById("toggle-form");
+    const authLogin = document.getElementById("auth-login");
+    const authRegister = document.getElementById("auth-register");
+    const formTitle = document.getElementById("form-title");
+    
+    toggleForm.addEventListener("click", (event) => {
+        event.preventDefault();
+    
+        if (authLogin.classList.contains("block")) {
+            document.title= "Sign Up";
+            authLogin.classList.add("hidden");
+            authLogin.classList.remove("block");
+            authRegister.classList.add("block");
+            authRegister.classList.remove("hidden");
+            formTitle.textContent = "Sign Up";
+            toggleForm.textContent = "Already have an account? Sign In";
+        } else {
+            document.title = "Sign In";
+            authRegister.classList.add("hidden");
+            authRegister.classList.remove("block");
+            authLogin.classList.add("block");
+            authLogin.classList.remove("hidden");
+            formTitle.textContent = "Sign In";
+            toggleForm.textContent = "Don't have an account? Sign Up";
+        }
+    });
+    document.addEventListener("htmx:afterRequest", function(event) {
+        const response = event.detail.xhr.response;
+        const jsonResponse = JSON.parse(response || '{}');
+
+        if (jsonResponse.redirect_url) {
+            window.location.href = jsonResponse.redirect_url;
+        }
+
+        if (jsonResponse.errors) {
+            const errorMessages = Object.values(jsonResponse.errors).join('<br>');
+            document.getElementById('error-messages').innerHTML = errorMessages;
+        } else if (jsonResponse.error) {
+            document.getElementById('error-messages').innerHTML = jsonResponse.error;
+        }
+    });
+</script>
+{% endblock %}

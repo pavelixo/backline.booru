@@ -1,15 +1,44 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{{ request.theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Backline{% endblock %}</title>
+    <script src="{% static 'js/dist/bundle.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'css/icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
     {% block head %}{% endblock %}
 </head>
 <body>
+    {% include "includes/header.html" %}
     {% block body %}{% endblock %}
-    <script src="{% static 'js/dist/bundle.js' %}" defer></script>
     {% block script %}{% endblock %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            const htmlElement = document.documentElement;
+            let currentTheme = htmlElement.classList.contains('light') ? 'light' : 'dark';
+        
+            themeToggle.addEventListener('click', function() {
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                htmlElement.classList.remove('light', 'dark');
+                htmlElement.classList.add(newTheme);
+                document.cookie = `theme=${newTheme}; path=/; max-age=${60*60*24*365}`;
+        
+                if (newTheme === 'light') {
+                    sunIcon.style.display = 'inline-block';
+                    moonIcon.style.display = 'none';
+                } else {
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'inline-block';
+                }
+                
+                currentTheme = newTheme;
+            });
+        });
+    </script>
 </body>
 </html>

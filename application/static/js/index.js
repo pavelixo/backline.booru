@@ -1,1 +1,2 @@
-import "../css/globals.css";
+import "htmx.org";
+import "../css/tailwind.css";

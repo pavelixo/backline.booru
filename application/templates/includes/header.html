@@ -1,0 +1,25 @@
+<header class="bg-accent py-2 relative shadow">
+    <div class="flex items-center justify-between w-full px-2">
+        <div class="flex space-x-2">
+            <a href="{% url 'root-view' %}" class="text-center flex justify-center items-center border-2 border-background bg-accent text-background transition-all duration-300 hover:bg-background hover:text-accent hover:scale-105">
+                <span class="icon home text-4xl"></span>
+            </a>
+            <a {% if user.is_authenticated %}href="/@{{ user.username }}"{% else %}href="{% url 'auth-view' %}"{% endif %} class="text-center flex justify-center items-center border-2 border-background bg-accent text-background transition-all duration-300 hover:bg-background hover:text-accent hover:scale-105">
+                {% if user.avatar %}
+                    <div class="w-[36px] h-[36px] bg-cover bg-no-repeat " style="background-image: url('{{ user.avatar.url }}');"></div>
+                {% else %}
+                    <span class="icon user text-4xl"></span>
+                {% endif %}
+            </a>
+            <button id="theme-toggle" class="text-center flex justify-center items-center border-2 border-background bg-accent text-background transition-all duration-300 hover:bg-background hover:text-accent hover:scale-105">
+                {% if request.theme == "light" %}
+                <span class="icon sun text-4xl" id="sun-icon" style="display: inline-block;"></span>
+                <span class="icon moon text-4xl" id="moon-icon"  style="display: none;"></span>
+                {% elif request.theme == "dark" %}
+                <span class="icon sun text-4xl" id="sun-icon" style="display: none;"></span>
+                <span class="icon moon text-4xl" id="moon-icon" style="display: inline-block;"></span>
+                {% endif %}
+            </button>
+        </div>
+    </div>
+</header>

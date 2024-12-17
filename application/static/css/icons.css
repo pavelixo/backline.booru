@@ -1,0 +1,25 @@
+.icon {
+    font-family: 'MaterialSymbols';
+    display: inline-block;
+    line-height: 1;
+}
+
+.icon.user::before {
+    content: "\e7fd";
+}
+
+.icon.home::before {
+    content: "\e88a";
+}
+
+.icon.search::before {
+    content: "\e8b6";
+}
+
+.icon.sun::before {
+    content: "\e430";
+}
+
+.icon.moon::before {
+    content: "\e51c";
+}

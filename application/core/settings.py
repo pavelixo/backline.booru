@@ -34,9 +34,11 @@ INSTALLED_APPS = [
     "pages",
     "posts",
     "users",
+    "authentication"
 ]
 
 MIDDLEWARE = [
+    "contrib.middleware.ThemeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
